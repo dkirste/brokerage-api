@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
+# Generate self-signed certificates for local development only.
+# For production, use scripts/init_letsencrypt.sh instead.
 set -euo pipefail
 
 CERT_DIR="$(cd "$(dirname "$0")/.." && pwd)/certs"
 mkdir -p "$CERT_DIR"
 
-DOMAIN="${1:-ip213-165-72-53.pbiaas.com}"
+DOMAIN="${1:-localhost}"
 
 openssl req -x509 -nodes -days 365 \
   -newkey rsa:2048 \
@@ -13,4 +15,4 @@ openssl req -x509 -nodes -days 365 \
   -subj "/C=US/ST=Local/L=Local/O=Dev/CN=$DOMAIN" \
   -addext "subjectAltName=DNS:$DOMAIN"
 
-echo "Certificates generated in $CERT_DIR"
+echo "Self-signed certificates generated in $CERT_DIR"

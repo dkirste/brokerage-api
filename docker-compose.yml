@@ -43,11 +43,7 @@ services:
       - certbot-certs:/etc/letsencrypt
     entrypoint: ""
     command: >
-      sh -c "certbot certonly --webroot -w /var/www/certbot
-      -d ip213-165-72-53.pbiaas.com
-      --email ${CERTBOT_EMAIL:-admin@example.com}
-      --agree-tos --non-interactive
-      && trap exit TERM; while :; do sleep 12h; certbot renew --quiet; done"
+      sh -c "trap exit TERM; while :; do sleep 12h; certbot renew --quiet; done"
 
 volumes:
   pgdata:

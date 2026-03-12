@@ -13,8 +13,8 @@ docker compose run --rm --entrypoint "" certbot sh -c "
     -subj '/CN=localhost'
 "
 
-echo "==> Starting nginx..."
-docker compose up -d nginx
+echo "==> Starting all services..."
+docker compose up -d
 
 echo "==> Requesting real certificate from Let's Encrypt..."
 docker compose run --rm --entrypoint "" certbot \
@@ -27,3 +27,4 @@ echo "==> Reloading nginx with real certificate..."
 docker compose exec nginx nginx -s reload
 
 echo "==> Done! SSL certificate issued for $DOMAIN"
+echo "==> API available at https://$DOMAIN"
