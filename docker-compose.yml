@@ -31,9 +31,25 @@ services:
       - "80:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-      - ./certs:/etc/nginx/certs:ro
+      - certbot-webroot:/var/www/certbot:ro
+      - certbot-certs:/etc/letsencrypt:ro
     depends_on:
       - api
 
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - certbot-webroot:/var/www/certbot
+      - certbot-certs:/etc/letsencrypt
+    entrypoint: ""
+    command: >
+      sh -c "certbot certonly --webroot -w /var/www/certbot
+      -d ip213-165-72-53.pbiaas.com
+      --email ${CERTBOT_EMAIL:-admin@example.com}
+      --agree-tos --non-interactive
+      && trap exit TERM; while :; do sleep 12h; certbot renew --quiet; done"
+
 volumes:
   pgdata:
+  certbot-webroot:
+  certbot-certs:
