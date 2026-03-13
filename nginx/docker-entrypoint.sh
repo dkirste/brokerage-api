@@ -3,7 +3,7 @@ set -e
 
 apk add --no-cache openssl >/dev/null 2>&1 || true
 
-DOMAIN="${DOMAIN:-ip213-165-72-53.pbiaas.com}"
+DOMAIN="${DOMAIN:-brokerage-api.hopto.org}"
 CERT_PATH="/etc/letsencrypt/live/$DOMAIN"
 
 # If no real Let's Encrypt certificate exists yet, create a temporary self-signed
