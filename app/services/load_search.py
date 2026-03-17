@@ -16,16 +16,26 @@ async def search_loads(session: AsyncSession, filters: LoadSearchRequest) -> lis
         stmt = stmt.where(Load.equipment_type.ilike(f"%{filters.equipment_type}%"))
     if filters.commodity_type:
         stmt = stmt.where(Load.commodity_type.ilike(f"%{filters.commodity_type}%"))
-    if filters.pickup_date:
-        stmt = stmt.where(cast(Load.pickup_date, Date) == filters.pickup_date)
-    if filters.max_weight is not None:
-        stmt = stmt.where(Load.weight <= filters.max_weight)
-    if filters.min_rate is not None:
-        stmt = stmt.where(Load.rate >= filters.min_rate)
-    if filters.max_miles is not None:
-        stmt = stmt.where(Load.miles <= filters.max_miles)
-    if filters.num_of_pieces is not None:
-        stmt = stmt.where(Load.num_of_pieces <= filters.num_of_pieces)
+
+    pickup_date = filters.get_pickup_date()
+    if pickup_date is not None:
+        stmt = stmt.where(cast(Load.pickup_date, Date) == pickup_date)
+
+    max_weight = filters.get_max_weight()
+    if max_weight is not None:
+        stmt = stmt.where(Load.weight <= max_weight)
+
+    min_rate = filters.get_min_rate()
+    if min_rate is not None:
+        stmt = stmt.where(Load.rate >= min_rate)
+
+    max_miles = filters.get_max_miles()
+    if max_miles is not None:
+        stmt = stmt.where(Load.miles <= max_miles)
+
+    num_of_pieces = filters.get_num_of_pieces()
+    if num_of_pieces is not None:
+        stmt = stmt.where(Load.num_of_pieces <= num_of_pieces)
 
     result = await session.execute(stmt.order_by(Load.pickup_date))
     return list(result.scalars().all())

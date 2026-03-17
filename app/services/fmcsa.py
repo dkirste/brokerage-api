@@ -27,6 +27,14 @@ MOCK_CARRIERS: dict[str, dict] = {
         "out_of_service": False,
         "insurance_on_file": True,
     },
+    "1234567": {
+        "legal_name": "Prime Logistics Corp.",
+        "dot_number": "3456789",
+        "entity_type": "CARRIER",
+        "allowed": True,
+        "out_of_service": False,
+        "insurance_on_file": True,
+    },
     "999999": {
         "legal_name": "Suspended Transport Co.",
         "dot_number": "9999999",
