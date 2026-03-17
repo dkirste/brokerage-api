@@ -1,7 +1,7 @@
 import datetime
 import uuid
 
-from sqlalchemy import DateTime, Float, Integer, String, Text, func
+from sqlalchemy import Date, DateTime, Float, Integer, String, Text, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
@@ -20,10 +20,11 @@ class Load(Base):
     weight: Mapped[float] = mapped_column(Float)
     rate: Mapped[float] = mapped_column(Float)
     miles: Mapped[int] = mapped_column(Integer)
-    pickup_date: Mapped[datetime.date] = mapped_column()
-    delivery_date: Mapped[datetime.date] = mapped_column()
+    pickup_date: Mapped[datetime.datetime] = mapped_column(DateTime(timezone=True))
+    delivery_date: Mapped[datetime.datetime] = mapped_column(DateTime(timezone=True))
     commodity_type: Mapped[str] = mapped_column(String(255))
     num_of_pieces: Mapped[int] = mapped_column(Integer)
+    dimensions: Mapped[str | None] = mapped_column(String(255), nullable=True)
     special_instructions: Mapped[str | None] = mapped_column(Text, nullable=True)
     status: Mapped[str] = mapped_column(String(50), default="available")
     created_at: Mapped[datetime.datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())

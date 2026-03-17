@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import cast, Date, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models import Load
@@ -17,7 +17,7 @@ async def search_loads(session: AsyncSession, filters: LoadSearchRequest) -> lis
     if filters.commodity_type:
         stmt = stmt.where(Load.commodity_type.ilike(f"%{filters.commodity_type}%"))
     if filters.pickup_date:
-        stmt = stmt.where(Load.pickup_date == filters.pickup_date)
+        stmt = stmt.where(cast(Load.pickup_date, Date) == filters.pickup_date)
     if filters.max_weight is not None:
         stmt = stmt.where(Load.weight <= filters.max_weight)
     if filters.min_rate is not None:

@@ -40,10 +40,11 @@ class LoadResponse(BaseModel):
     weight: float
     rate: float
     miles: int
-    pickup_date: datetime.date
-    delivery_date: datetime.date
+    pickup_date: datetime.datetime
+    delivery_date: datetime.datetime
     commodity_type: str
     num_of_pieces: int
+    dimensions: str | None = None
     special_instructions: str | None = None
     status: str
 

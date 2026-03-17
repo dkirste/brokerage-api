@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-DOMAIN="${DOMAIN:-ip213-165-72-53.pbiaas.com}"
+DOMAIN="${DOMAIN:-brokerage-api.hopto.org}"
 EMAIL="${CERTBOT_EMAIL:-admin@example.com}"
 
 echo "==> Starting services (nginx will create a temporary self-signed cert if needed)..."
