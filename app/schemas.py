@@ -1,6 +1,8 @@
 import datetime
 import uuid
 
+import re
+
 from pydantic import BaseModel, field_validator
 
 
@@ -31,9 +33,12 @@ class LoadSearchRequest(BaseModel):
     commodity_type: str | None = None
     num_of_pieces: str | None = None
 
-    @field_validator("pickup_date", mode="before")
+    @field_validator(
+        "pickup_date", "max_weight", "min_rate", "max_miles",
+        "commodity_type", "num_of_pieces", mode="before",
+    )
     @classmethod
-    def parse_pickup_date(cls, v: object) -> str | None:
+    def empty_str_to_none(cls, v: object) -> str | None:
         if v is None or v == "":
             return None
         return str(v)
@@ -46,11 +51,17 @@ class LoadSearchRequest(BaseModel):
         except (ValueError, TypeError):
             return None
 
+    @staticmethod
+    def _extract_number(value: str) -> str:
+        """Strip trailing units and whitespace, keeping only the leading number."""
+        match = re.match(r"^\s*([+-]?\d+(?:\.\d+)?)", value)
+        return match.group(1) if match else value
+
     def get_max_weight(self) -> float | None:
         if not self.max_weight:
             return None
         try:
-            return float(self.max_weight)
+            return float(self._extract_number(self.max_weight))
         except (ValueError, TypeError):
             return None
 
@@ -58,7 +69,7 @@ class LoadSearchRequest(BaseModel):
         if not self.min_rate:
             return None
         try:
-            return float(self.min_rate)
+            return float(self._extract_number(self.min_rate))
         except (ValueError, TypeError):
             return None
 
@@ -66,7 +77,7 @@ class LoadSearchRequest(BaseModel):
         if not self.max_miles:
             return None
         try:
-            return int(self.max_miles)
+            return int(float(self._extract_number(self.max_miles)))
         except (ValueError, TypeError):
             return None
 
@@ -74,7 +85,7 @@ class LoadSearchRequest(BaseModel):
         if not self.num_of_pieces:
             return None
         try:
-            return int(self.num_of_pieces)
+            return int(float(self._extract_number(self.num_of_pieces)))
         except (ValueError, TypeError):
             return None
 
